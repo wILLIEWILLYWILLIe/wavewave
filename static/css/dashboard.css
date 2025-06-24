@@ -1,0 +1,62 @@
+@charset "UTF-8";
+.ant-tables {
+    display: flex;
+    flex-wrap: nowrap; /* 不允許子項自動換行 */
+    width: 100%; /* 確保占滿父容器寬度 */
+    height: 100%; /* 確保占滿父容器高度 */
+    text-align: center; /* 內容水平居中對齊 */
+    align-items: center; /* 內容垂直居中對齊 */
+  }
+  .ant-unit {
+    flex: 0 0 calc(100% / 16); /* 每個單位的寬度為容器的1/16 */
+    box-sizing: border-box; /* 包括內邊距與邊框 */
+    padding: 0px; /* 可調整內邊距以控制間距 */
+    text-align: center; /* 內容水平居中對齊 */
+    align-items: center; /* 內容垂直居中對齊 */
+    height: 100%; /* 高度填滿父容器 */
+  }
+
+  .received-ant, .received-ant-received {
+    font-weight: bold;
+    height: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgb(223, 223, 223);
+    font-size: 13px;
+  }
+  .received-ant-received {
+    background: #48ff00;
+  }
+  .received-ant {
+    background: #fffbfb;
+  }
+
+  .ant-id, .ant-id-selected, .power {
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    white-space: pre-wrap;
+  }
+  .ant-id, .ant-id-selected {
+    height: 30%;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    border-top: 1px solid black;
+    border-bottom: 1px solid rgba(167, 164, 164);
+  }
+  .ant-id-selected{
+    background: #ff0000;
+    color: #fff;
+  }
+
+  .power {
+    height: 40%;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+    font-size: 14px;
+    /* border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px; */
+  }

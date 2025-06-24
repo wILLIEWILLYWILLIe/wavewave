@@ -1,0 +1,8 @@
+matplotlib
+numpy
+torch
+scipy
+pyhackrf2
+opencv-python
+tqdm
+flask

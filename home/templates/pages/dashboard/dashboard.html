@@ -1,0 +1,121 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% if segment == 'ismartwave' %}
+<link rel="stylesheet" href="{% static 'css/ismartwave.css' %}">
+{% endif %}
+{% endblock extrastyle %}
+{% block extrahead %}
+<!-- mqtt JS -->
+<script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+<link href="{% static 'bootstrap-icons/font/bootstrap-icons.min.css' %}" rel="stylesheet">
+{% endblock extrahead %}
+
+{% block content %}
+  <!-- 應用標題區域 -->
+  <div class="row mb-3">
+    <div class="col-12">
+      <div class="card border-0 {% if segment == 'ismartwave' %}ismartwave-header{% else %}bg-primary{% endif %} text-white">
+        <div class="card-body py-2">
+          <h4 class="mb-0">
+            <i class="bi bi-radar me-2"></i>
+            {{ app_name|default:"Dashboard" }} v{{ app_version|default:"1.0" }}
+            {% if segment == 'ismartwave' %}
+              <span class="badge bg-warning text-dark ms-2">iSmartWave</span>
+            {% endif %}
+          </h4>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12 col-lg-6 mb-2">
+      <div class="card border-1 shadow mb-2 {% if segment == 'ismartwave' %}radar-container{% endif %}" style="height: 60vh; min-height: 520px">
+        <div class="d-flex justify-content-between mt-1 ms-2 me-2"><div style="font-size: 16px;">RADAR</div></div>
+        <div class="card-body" style="position: relative;  overflow: hidden;">
+          <div id="polygon-status" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+        </div>
+      </div>
+      <div class="card border-1 shadow mt-2 {% if segment == 'ismartwave' %}debug-window{% endif %}" style="height: 20vh; min-height: 180px">
+        <div class="d-flex justify-content-between mt-1 pb-1 ms-2 me-2">
+          <div style="font-size: 16px;">DEBUG WINDOW</div>
+          <div id="ws_status" class="{% if segment == 'ismartwave' %}status-indicator{% endif %}">Websocket disconnect</div>
+          <div>
+            <input type="checkbox" id="debug_auto_scroll" checked> auto scroll </input>
+            <button type="button" class="btn {% if segment == 'ismartwave' %}btn-ismartwave{% else %}btn-outline-info{% endif %} btn-sm ms-1"  id="debug_clear_log" >clear log</button>
+          </div>
+        </div>
+        <div class="card-body pt-1 pb-1" id="log_content" style="overflow-y: auto; max-height: 100%;">
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-lg-6 mb-2">
+      <div class="row">
+        <div class="col-lg-12 mb-2">
+          <div class="card border-1 shadow" style="height: 19vh; min-height: 180px">
+            <div class="d-flex justify-content-between mt-1 ms-2 me-2"><div style="font-size: 16px;">ANT</div></div>
+            <div class="card-body d-flex justify-content-center align-items-center">
+              <div class="ant-tables row" id ="ant-tables">
+                  {% for i in ant_range %}
+                    <div class="ant-unit col" id="ant-unit-{{i}}">
+                      <div class="received-ant"></div>
+                      <div class="ant-id">{{i}}</div>
+                      <div class="power"></div>
+                    </div>
+                  {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 mb-2">
+          <div id="expandableCardTarget" class="card border-1 shadow mt-2 " style="height: 60vh; min-height: 267px; transition: all 0.1s ease;">
+            <div class="d-flex justify-content-between mt-1 ms-2 me-2">
+              <div style="font-size: 16px;">TARGET</div><i id="expandButtonTarget" class="bi bi-arrows-fullscreen" style="cursor: pointer;"></i></div>
+            <div class="card-body" style="position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+              <img id="targetDisplay" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUAAAACCAYAAACQahZdAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAUSURBVBhXY/wPBAxogAlKIwEGBgCd4AQAJEeMQQAAAABJRU5ErkJggg==" 
+                  style="object-fit: scale-down; object-position: center;" 
+                  alt="Base64 Image" />
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 mb-2 mt-2">
+          <div id="expandableCardSpec" class="card border-1 shadow" style="height: 30vh; min-height: 180px; transition: all 0.1s ease;">
+            <div class="d-flex justify-content-between mt-1 ms-2 me-2">
+              <div style="font-size: 16px;">SPEC</div><i id="expandButtonSpec" class="bi bi-arrows-fullscreen" style="cursor: pointer;"></i></div>
+            <div class="card-body" style="position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+              <img id="spectrogramDisplay" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUAAAACCAYAAACQahZdAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAUSURBVBhXY/wPBAxogAlKIwEGBgCd4AQAJEeMQQAAAABJRU5ErkJggg==" 
+                  style="object-fit: scale-down; object-position: center;" 
+                  alt="Base64 Image" />
+            </div>
+          </div>
+          <div id="expandableCardPf" class="card border-1 shadow" style="height: 30vh; min-height: 180px; transition: all 0.1s ease;">
+            <div class="d-flex justify-content-between mt-1 ms-2 me-2"><div style="font-size: 16px;">PF</div><i id="expandButtonPf" class="bi bi-arrows-fullscreen" style="cursor: pointer;"></i></div>
+            <div class="card-body" style="position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+              <img id="pfDisplay" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUAAAACCAYAAACQahZdAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAUSURBVBhXY/wPBAxogAlKIwEGBgCd4AQAJEeMQQAAAABJRU5ErkJggg==" 
+                  style="object-fit: scale-down; object-position: center;" 
+                  alt="Base64 Image" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+
+{% block extra_js %}
+  {% csrf_token %}
+  <script src="{% static 'assets/js/dashboard.js' %}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const content = document.querySelector('main.content');      
+      if (content) {
+        content.style.marginLeft = '0'; // 移除 margin
+        content.style.width = '100%';  // 內容區域占據全屏
+      }
+    });
+  </script>
+{% endblock extra_js %}
+

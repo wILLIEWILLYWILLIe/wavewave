@@ -1,0 +1,116 @@
+/* iSmartWave 專用樣式 */
+
+/* 主題色彩 */
+:root {
+    --ismartwave-primary: #2c3e50;
+    --ismartwave-secondary: #34495e;
+    --ismartwave-accent: #3498db;
+    --ismartwave-success: #27ae60;
+    --ismartwave-warning: #f39c12;
+    --ismartwave-danger: #e74c3c;
+}
+
+/* 應用標題樣式 */
+.ismartwave-header {
+    background: linear-gradient(135deg, var(--ismartwave-primary), var(--ismartwave-secondary)) !important;
+    border: none !important;
+}
+
+.ismartwave-header h4 {
+    color: white !important;
+    font-weight: 600;
+}
+
+/* 卡片樣式 */
+.card {
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    transition: box-shadow 0.3s ease;
+}
+
+/* 雷達區域特殊樣式 */
+.radar-container {
+    background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+    border-radius: 8px;
+}
+
+/* 天線單元樣式 */
+.ant-unit {
+    background: var(--ismartwave-primary);
+    color: white;
+    border-radius: 6px;
+    margin: 2px;
+    padding: 8px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.ant-unit:hover {
+    background: var(--ismartwave-accent);
+    transform: scale(1.05);
+}
+
+/* 調試窗口樣式 */
+.debug-window {
+    background: #2c3e50;
+    color: #ecf0f1;
+    border-radius: 8px;
+}
+
+.debug-window .card-header {
+    background: var(--ismartwave-secondary);
+    color: white;
+    border-bottom: 1px solid var(--ismartwave-accent);
+}
+
+/* 按鈕樣式 */
+.btn-ismartwave {
+    background: var(--ismartwave-accent);
+    border-color: var(--ismartwave-accent);
+    color: white;
+}
+
+.btn-ismartwave:hover {
+    background: var(--ismartwave-primary);
+    border-color: var(--ismartwave-primary);
+    color: white;
+}
+
+/* 狀態指示器 */
+.status-indicator {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.status-connected {
+    background: var(--ismartwave-success);
+    color: white;
+}
+
+.status-disconnected {
+    background: var(--ismartwave-danger);
+    color: white;
+}
+
+.status-connecting {
+    background: var(--ismartwave-warning);
+    color: white;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    .ismartwave-header h4 {
+        font-size: 1.2rem;
+    }
+    
+    .ant-unit {
+        padding: 6px;
+        margin: 1px;
+    }
+} 
