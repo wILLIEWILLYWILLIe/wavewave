@@ -6,7 +6,7 @@ services:
     build: mqtt/.
     ports:
       - "9002:9001"
-      - "1884:1883"
+      - "1884:1884"
     networks:
       - db_network
       - web_network
