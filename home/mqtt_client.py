@@ -28,8 +28,12 @@ class MqttClient:
         self.client.on_connect = self.__on_connect
         self.client.on_message = self.__on_message
         print(f'Set mqtt client on {self.host}:{self.port}')
-        self.client.connect(self.host, self.port)
-        self.client.loop_start()
+        # 延遲連接，避免啟動時失敗
+        try:
+            self.client.connect(self.host, self.port)
+            self.client.loop_start()
+        except Exception as e:
+            print(f'MQTT connection failed: {e}, will retry later')
 
     def __on_connect(self, client, userdata, flags, rc, properties):
         print(f"Connected with result code {rc}. topic={len(self.topic)}")
